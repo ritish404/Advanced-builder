@@ -48,9 +48,12 @@ function classifyGesture(lm: any[]): string {
 
 interface Props {
   videoRef: React.RefObject<HTMLVideoElement | null>;
+  cameraStarting: boolean;
+  cameraError: string;
+  onEnableCamera: () => void;
 }
 
-export function GestureWidget({ videoRef }: Props) {
+export function GestureWidget({ videoRef, cameraStarting, cameraError, onEnableCamera }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [errorMsg, setErrorMsg] = useState('');
@@ -365,11 +368,19 @@ export function GestureWidget({ videoRef }: Props) {
           </div>
         )}
         {!cameraConnected && status !== 'loading' && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-[#020612]/80 z-10">
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#020612]/90 z-10 px-4">
             <span className="text-2xl">📷</span>
-            <span className="text-[7px] text-white/30 text-center px-3 leading-tight">
-              Camera not detected.<br/>Grant permission in your browser.
+            <span className="text-[7px] text-white/50 text-center leading-tight">
+              {cameraError || 'Camera access is needed for gesture control.'}
             </span>
+            <button
+              type="button"
+              onClick={onEnableCamera}
+              disabled={cameraStarting}
+              className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-3 py-1.5 text-[7px] font-bold uppercase tracking-[0.16em] text-cyan-300 transition hover:bg-cyan-400/20 disabled:cursor-wait disabled:opacity-60"
+            >
+              {cameraStarting ? 'Connecting…' : 'Enable camera'}
+            </button>
           </div>
         )}
 
