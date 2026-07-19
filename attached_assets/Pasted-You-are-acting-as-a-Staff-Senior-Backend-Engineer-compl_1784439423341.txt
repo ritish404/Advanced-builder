@@ -1,0 +1,62 @@
+You are acting as a Staff/Senior Backend Engineer completing the "distributed-job-scheduler" 
+project to a production-grade, FAANG-interview-defensible standard. This is a Spring Boot 
+(Java, Lombok) project with a scheduler-api module (controller/dto/exception/mapper/validation), 
+Docker, and Kubernetes manifests (deployment, service, hpa, ingress, configmap, secret, namespace) 
+already scaffolded.
+
+Do NOT just make it "work." Make it defensible in a system design interview. Specifically:
+
+1. AUDIT FIRST
+   - Review pom.xml, the k8s manifests, and every package under scheduler-api.
+   - Identify what's missing, half-built, or inconsistent with the folder structure that already exists.
+   - Give me a short gap analysis before writing code: what's done, what's stubbed, what's absent.
+
+2. CORE DISTRIBUTED SYSTEM REQUIREMENTS (this is the actual point of the project)
+   - Leader election or distributed locking so only one node executes a given scheduled job 
+     (use ShedLock, Redis-based lock, or Zookeeper/etcd — pick one and justify it in a comment/README).
+   - Job persistence with state machine: PENDING → RUNNING → SUCCESS/FAILED/RETRYING → DEAD_LETTER.
+   - At-least-once execution semantics with idempotency keys so retries don't double-execute side effects.
+   - Exponential backoff + jitter for retries, configurable max attempts, dead-letter queue for exhausted jobs.
+   - Horizontal scalability: job partitioning/sharding across instances (consistent hashing or DB-based claim).
+   - Graceful shutdown: in-flight jobs finish or checkpoint cleanly on SIGTERM (important for the k8s HPA setup already in the repo).
+
+3. API LAYER
+   - REST endpoints: create/schedule job, cancel, pause/resume, get status, list with filtering/pagination.
+   - Proper DTO/Entity separation using the existing mapper package (MapStruct if not already used).
+   - Centralized exception handling via @ControllerAdvice — map domain exceptions to correct HTTP codes.
+   - Request validation using the existing validation package — enforce cron expression correctness, 
+     payload size limits, and job-type whitelisting.
+   - Versioned API (/api/v1/...) and OpenAPI/Swagger docs generated automatically.
+
+4. OBSERVABILITY (this is what separates a toy project from a FAANG-level one)
+   - Structured JSON logging with correlation/trace IDs per job execution.
+   - Micrometer + Prometheus metrics: job success/failure rate, execution latency, queue depth, retry count.
+   - Health checks (liveness/readiness) wired correctly into the k8s deployment.yaml that already exists.
+   - Basic distributed tracing hooks (OpenTelemetry) even if just logged locally for now.
+
+5. RESILIENCE & SECURITY
+   - Rate limiting on job submission endpoints.
+   - Input sanitization to prevent arbitrary code/command injection if jobs execute shell/scripts.
+   - Secrets pulled from the existing k8s secret.yaml, never hardcoded.
+   - Circuit breaker (Resilience4j) around any downstream calls a job makes.
+
+6. TESTING
+   - Unit tests for scheduler core logic (state transitions, retry logic, idempotency).
+   - Integration tests using Testcontainers (real Postgres/Redis, not H2/mocks) for the locking and persistence layer.
+   - At least one test proving two instances can't double-execute the same job (this is the test that matters most).
+
+7. DOCUMENTATION
+   - Update README/HELP.md with: architecture diagram (ASCII or mermaid), design decisions and trade-offs, 
+     how to run locally via docker-compose, and how leader election/sharding works.
+   - Add a "Why this design" section explicitly written as if answering a system design interviewer — 
+     covering consistency vs availability trade-offs made and why.
+
+8. K8S PRODUCTION READINESS
+   - Review hpa.yaml scaling thresholds against actual job load characteristics, not defaults.
+   - Confirm configmap/secret are actually wired into the deployment env vars.
+   - Add resource requests/limits if missing.
+
+Work through this in order: gap analysis → core scheduler logic → API layer → observability → 
+resilience → tests → docs → k8s hardening. After each major step, summarize what you changed and 
+why, as if writing a PR description. Flag anywhere you had to make an architectural assumption so 
+I can defend or challenge it myself.

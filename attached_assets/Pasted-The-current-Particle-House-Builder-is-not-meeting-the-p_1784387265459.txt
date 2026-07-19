@@ -1,0 +1,170 @@
+The current Particle House Builder is not meeting the project requirements.
+
+Current Problems
+----------------
+1. Hand tracking does not detect or control the house.
+2. The webcam feed is not visible as the live background.
+3. The house is only a blurry cloud of particles instead of a recognizable architectural model.
+4. Build and Destroy animations are not controlled by gestures.
+5. The house lacks realistic architectural details and multiple design styles.
+
+Your task is to upgrade this into a production-quality interactive experience.
+
+=========================
+PART 1 - Real Hand Tracking
+=========================
+
+Implement MediaPipe Hands (latest version).
+
+Requirements:
+- Detect up to 2 hands.
+- Track all 21 landmarks.
+- Draw skeleton landmarks for debugging.
+- Show confidence score.
+- Maintain 30-60 FPS.
+
+Gestures:
+- Right hand open → Build House
+- Left hand open → Destroy House
+- Closed fist → Pause animation
+- Pinch → Select object
+- Two open hands → Rotate house
+- Swipe left/right → Change house design
+- Thumbs up → Switch camera mode
+
+=========================
+PART 2 - Camera Background
+=========================
+
+Use the webcam as the full-screen animated background.
+
+Requirements:
+- Request camera permission automatically.
+- Render the live video behind the WebGL canvas.
+- WebGL canvas must have alpha:true.
+- Keep particles transparent over the camera.
+- UI overlays remain on top.
+
+=========================
+PART 3 - Real Particle House
+=========================
+
+Do NOT generate a random particle cloud.
+
+Instead:
+
+1. Load a high-quality GLTF/GLB house model.
+2. Sample every vertex.
+3. Convert vertices into GPU particles.
+4. Animate particles from random positions into the exact house shape.
+5. Preserve all architectural details.
+
+The final result must clearly show:
+- Foundation
+- Walls
+- Roof
+- Windows
+- Doors
+- Balcony
+- Stairs
+- Columns
+- Garage
+- Garden
+
+The house must remain recognizable during every animation.
+
+=========================
+PART 4 - House Designs
+=========================
+
+Add multiple premium house styles:
+
+- Modern Villa
+- Luxury Mansion
+- Beach House
+- Japanese House
+- Mountain Cabin
+- Cyberpunk Smart House
+- Scandinavian House
+- Minimal Glass House
+
+Each design should use its own GLB model and particle reconstruction.
+
+=========================
+PART 5 - Gesture Animation
+=========================
+
+Open Palm
+→ Particles assemble into the house
+
+Closed Fist
+→ Freeze animation
+
+Wave Left
+→ Explode into particles
+
+Wave Right
+→ Rebuild
+
+Two Hands
+→ Rotate the house
+
+Pinch
+→ Zoom
+
+=========================
+PART 6 - Visual Quality
+=========================
+
+Improve realism by adding:
+- HDR environment
+- Bloom
+- Soft shadows
+- Ambient Occlusion
+- Screen Space Reflections
+- Motion Blur
+- Depth of Field
+- Dynamic lighting
+- Reflection probes
+
+=========================
+PART 7 - Performance
+=========================
+
+Use:
+- GPU Instancing
+- InstancedBufferGeometry
+- ShaderMaterial
+- Frustum Culling
+- Level of Detail (LOD)
+
+Target:
+100,000+ particles
+60 FPS
+No memory leaks
+
+=========================
+PART 8 - Debug Panel
+=========================
+
+Display:
+Camera: Connected
+MediaPipe: Loaded
+Hands Detected: 0/1/2
+Gesture: Current
+Particles: Count
+FPS
+Current House Style
+
+=========================
+PART 9 - Final Requirement
+=========================
+
+Do not stop after editing the code.
+
+Keep debugging until:
+- Camera background is visible.
+- Hand gestures control the house.
+- The house reconstructs into a detailed architectural model.
+- Every design style works correctly.
+- No runtime or console errors remain.

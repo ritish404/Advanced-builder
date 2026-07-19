@@ -1,0 +1,323 @@
+Build a next-generation interactive 3D web application where a complete house is generated from millions of animated particles.
+
+Project Name:
+Particle House Builder
+
+Goal:
+Create a futuristic visualization where a house is assembled from glowing particles in real time. Users can interact with every part of the structure using hand gestures, mouse movement, or touch.
+
+Tech Stack
+------------
+Frontend
+- React
+- Next.js
+- TypeScript
+- Three.js
+- React Three Fiber
+- Drei
+
+Animation
+------------
+- GPU Particle System
+- GLSL Shaders
+- Post Processing
+- Bloom
+- Motion Blur
+- Depth of Field
+
+Physics
+------------
+- Rapier Physics
+or
+- Cannon.js
+
+AI
+------------
+- TensorFlow.js
+or
+- MediaPipe Hands
+for gesture recognition.
+
+3D Assets
+------------
+Load GLTF house models.
+
+Features
+------------
+
+1. House Construction Animation
+
+Initially there is only empty space.
+
+Millions of golden particles float in the air.
+
+Particles slowly gather together.
+
+Foundation appears.
+
+Walls are created.
+
+Windows assemble.
+
+Roof forms.
+
+Furniture appears.
+
+Garden grows.
+
+Everything is built using particles.
+
+2. Interactive Building
+
+Click any room.
+
+Explode it into particles.
+
+Rebuild it.
+
+Rotate every floor.
+
+Inspect every wall.
+
+Open doors.
+
+Open windows.
+
+Toggle roof visibility.
+
+3. Floor-by-Floor Mode
+
+Ground Floor
+
+First Floor
+
+Second Floor
+
+Roof
+
+Basement
+
+Each floor can be isolated.
+
+4. Room Inspection
+
+Bedroom
+
+Kitchen
+
+Bathroom
+
+Living Room
+
+Dining Area
+
+Garage
+
+Garden
+
+Each room has labels and information.
+
+5. House Blueprint
+
+Switch between
+
+Normal Mode
+
+Wireframe
+
+Blueprint
+
+Glass House
+
+Particle View
+
+X-Ray View
+
+6. Gesture Controls
+
+Raise right hand
+
+→ Build house
+
+Raise left hand
+
+→ Destroy house into particles
+
+Both hands together
+
+→ Rotate house
+
+Pinch
+
+→ Zoom
+
+Spread fingers
+
+→ Explode particles
+
+7. Realistic Effects
+
+Golden particles
+
+Bloom
+
+Ambient lighting
+
+HDRI Environment
+
+Soft shadows
+
+Reflection
+
+Fog
+
+Screen Space Reflection
+
+8. Camera
+
+Orbit Controls
+
+Cinematic Camera
+
+Drone View
+
+Walkthrough Mode
+
+First Person View
+
+9. Performance
+
+GPU Instancing
+
+Frustum Culling
+
+LOD
+
+Web Workers
+
+Shader Optimization
+
+60 FPS on modern browsers
+
+10. UI
+
+Minimal futuristic dashboard
+
+Buttons
+
+Build
+
+Destroy
+
+Particle Density
+
+Animation Speed
+
+Lighting
+
+House Theme
+
+Blueprint Mode
+
+Statistics Panel
+
+Particles Count
+
+FPS
+
+Vertices
+
+Memory Usage
+
+GPU Usage
+
+11. Themes
+
+Modern House
+
+Luxury Villa
+
+Japanese House
+
+Mountain Cabin
+
+Beach House
+
+Cyberpunk House
+
+Smart Home
+
+Tiny House
+
+12. Export
+
+Export Screenshot
+
+Export Video
+
+Export GLTF
+
+Export Blueprint PDF
+
+Project Structure
+
+src/
+│
+├── components/
+│   ├── House/
+│   ├── Particles/
+│   ├── Camera/
+│   ├── Lighting/
+│   ├── UI/
+│   ├── Blueprint/
+│   └── Effects/
+│
+├── shaders/
+│
+├── hooks/
+│
+├── utils/
+│
+├── assets/
+│
+├── animations/
+│
+├── physics/
+│
+├── ai/
+│
+├── store/
+│
+└── pages/
+
+Bonus Features
+
+✔ AI-generated house layouts
+
+✔ Voice commands
+
+✔ Procedural room generation
+
+✔ Multiplayer collaboration
+
+✔ VR support
+
+✔ AR support
+
+✔ Day/Night cycle
+
+✔ Rain and weather
+
+✔ Interior customization
+
+✔ Furniture placement
+
+✔ Solar panel simulation
+
+✔ Energy consumption dashboard
+
+✔ Smart lighting simulation
+
+Expected Result
+
+A cinematic, Apple-style interactive web experience where a realistic 3D house assembles from millions of glowing particles, allowing users to explore every room, floor, and architectural component with fluid animations and gesture-based interaction, optimized for production-level performance.

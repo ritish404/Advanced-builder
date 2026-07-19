@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Particle House Builder"
+version = "1.0.0"
+id = "artifacts/particle-house"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24125
+
+[services.development]
+run = "pnpm --filter @workspace/particle-house run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/particle-house", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/particle-house/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24125"
+BASE_PATH = "/"

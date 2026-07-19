@@ -1,0 +1,3 @@
+- [R3F WebGL crash handling](r3f-webgl-crash.md) — Canvas needs ErrorBoundary + pre-flight hasWebGL() check; sandbox has no GPU
+- [MediaPipe Hands 0.4.x API](mediapipe-hands-api.md) — no initialize() method; WASM loads lazily on first send(); script loaded via CDN onload
+- [React 18 useRef typing](react-useref-typing.md) — useRef<T>(null) returns RefObject<T | null>, not RefObject<T>; prop types must match
