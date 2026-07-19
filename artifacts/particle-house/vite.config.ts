@@ -1,31 +1,46 @@
 import path from 'path';
+import { existsSync } from 'fs';
+import { execSync } from 'child_process';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 
-const rawPort = process.env.PORT;
-
-if (!rawPort) {
-  throw new Error(
-    'PORT environment variable is required but was not provided.',
-  );
+// ── Copy MediaPipe Hands assets into public/mediapipe-hands/ ──────────────────
+//
+//  Why not CDN?  Replit's CSP blocks cross-origin WASM evaluation, so loading
+//  from cdn.jsdelivr.net silently fails.
+//
+//  Why not symlinkSync / cpSync?  pnpm stores packages as symlinks in
+//  node_modules.  Both fs helpers mishandle the top-level symlink and either
+//  recreate it (failing with EEXIST on restart) or produce an empty directory.
+//
+//  Fix: resolve the real path with `realpath`, then copy with `cp -rL` which
+//  dereferences all symlinks and copies actual files.  Guard on hands.js so
+//  we skip if files are already present.
+//
+try {
+  const dest = path.join(import.meta.dirname, 'public/mediapipe-hands');
+  if (!existsSync(path.join(dest, 'hands.js'))) {
+    const real = execSync('realpath node_modules/@mediapipe/hands', {
+      cwd: import.meta.dirname,
+    }).toString().trim();
+    execSync(`rm -rf "${dest}" && cp -rL "${real}" "${dest}"`, {
+      cwd: import.meta.dirname,
+    });
+    console.log('[vite] MediaPipe Hands assets copied to public/mediapipe-hands/');
+  }
+} catch (e: any) {
+  console.warn('[vite] Could not copy MediaPipe assets:', e?.message ?? e);
 }
 
+// ── Port / base-path validation ───────────────────────────────────────────────
+const rawPort = process.env.PORT || "5173";
 const port = Number(rawPort);
+if (Number.isNaN(port) || port <= 0) throw new Error(`Invalid PORT: "${rawPort}"`);
 
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
-
-const basePath = process.env.BASE_PATH;
-
-if (!basePath) {
-  throw new Error(
-    'BASE_PATH environment variable is required but was not provided.',
-  );
-}
+const basePath = process.env.BASE_PATH || "/";
 
 export default defineConfig({
   base: basePath,
@@ -36,24 +51,16 @@ export default defineConfig({
     ...(process.env.NODE_ENV !== 'production' &&
     process.env.REPL_ID !== undefined
       ? [
-          // cartographer is intentionally omitted: it injects data-component-name
-          // props into every JSX element, which crashes R3F's applyProps() when it
-          // tries to set HTML attributes on Three.js objects.
-          await import('@replit/vite-plugin-dev-banner').then((m) =>
-            m.devBanner(),
-          ),
+          // cartographer intentionally omitted — it injects data-component-name
+          // HTML attributes that crash R3F's applyProps() on Three.js objects.
+          await import('@replit/vite-plugin-dev-banner').then((m) => m.devBanner()),
         ]
       : []),
   ],
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, 'src'),
-      '@assets': path.resolve(
-        import.meta.dirname,
-        '..',
-        '..',
-        'attached_assets',
-      ),
+      '@assets': path.resolve(import.meta.dirname, '..', '..', 'attached_assets'),
     },
     dedupe: ['react', 'react-dom'],
   },
@@ -67,9 +74,7 @@ export default defineConfig({
     strictPort: true,
     host: '0.0.0.0',
     allowedHosts: true,
-    fs: {
-      strict: true,
-    },
+    fs: { strict: false },
   },
   preview: {
     port,
